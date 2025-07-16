@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Short Polling Example</title>
+    <script>
+        async function fetchDate(){
+            const response = await fetch('/poll').then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            }).then(data => {
+                document.getElementById('main').innerText = data;
+            }).catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+                document.getElementById('main').innerText = 'Error fetching date';
+            });
+        }
+        const inst = setInterval(()=>{fetchDate()}, 5000);
+        
+        setTimeout(()=>clearInterval(inst), 1000000)// Poll every 5 seconds
+        //fetchDate();
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #status {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Short Polling Example</h1>
+    <h3 id="main">Loading.....</h3>
+</html>
