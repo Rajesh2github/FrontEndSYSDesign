@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Long Polling Example</title>
+    <script>
+        async function fetchDate(){
+            const response = await fetch('/getData');
+            const data = await response.json();
+            document.getElementById('main').innerText = data.data || "No data available";
+        }
+       fetchDate();
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #status {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Long Polling Example</h1>
+    <h3 id="main">Loading.....</h3>
+</html>
