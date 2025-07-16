@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Socket.IO Chat</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+    }
+    #chat {
+      width: 100%;
+      height: 300px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+      background: #f9f9f9;
+    }
+    input[type="text"] {
+      width: 80%;
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+  <!-- Include Socket.IO client -->
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+
+<h2>Socket.IO Chat</h2>
+
+<div id="chat"></div>
+
+<input type="text" id="messageInput" placeholder="Type your message..." />
+<button onclick="sendMessage()">Send</button>
+
+<script>
+  // Connect to Socket.IO server
+  const socket = io('http://localhost:3000'); // Adjust if your server is elsewhere
+
+  const chat = document.getElementById('chat');
+  const messageInput = document.getElementById('messageInput');
+
+  // Display message in chat box
+  function addMessage(msg, from = 'server') {
+    const div = document.createElement('div');
+    div.textContent = from === 'client' ? `You: ${msg}` : `Server: ${msg}`;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  // Receive message from server
+  socket.on('chat-messageP', (msg) => {
+    addMessage(msg, 'server');
+  });
+
+  // Send message to server
+  function sendMessage() {
+    const msg = messageInput.value;
+    if (msg.trim() !== '') {
+      socket.emit('chat-messageP', msg);
+      addMessage(msg, 'client');
+      messageInput.value = '';
+    }
+  }
+
+  // Optional logs
+  socket.on('connect', () => console.log('Connected to server'));
+  socket.on('disconnect', () => console.log('Disconnected from server'));
+</script>
+
+</body>
+</html>
